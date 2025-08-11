@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('0. 자동화 확인1') { steps { echo '스테이지 출발' } }
         
-        stage('1. Build') {
+/*        stage('1. Build') {
             steps {
                 echo 'Maven으로 빌드 시작'
                 sh 'mvn clean package'
@@ -20,14 +20,16 @@ pipeline {
                 sh 'docker version'
             }
         }
+*/
         
-        stage('3. Docker Build') {
+/*        stage('3. Docker Build') {
             steps {
                 sh 'docker build -t ex01-app:latest .'
             }
         }
+*/
 
-        stage('4. Docker Push') {
+/*        stage('4. Docker Push') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-cred',
@@ -40,6 +42,15 @@ pipeline {
                     docker push $DOCKERHUB_USERNAME/ex02-app:latest
                     '''
                 }
+            }
+        }
+*/
+		  stage('5. Deploy to K3s') {
+            steps {
+                sh '''
+                export KUBECONFIG=/home/vagrant/.kube/config
+                kubectl apply -f k8s-deployment.yaml
+                '''
             }
         }
     }
